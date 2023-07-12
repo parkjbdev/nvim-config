@@ -11,9 +11,18 @@ set number
 set cursorline
 set autochdir
 set termguicolors
+set foldmethod=indent
+set backspace=indent,eol,start
 
-" Tab navigation like Firefox.
-nnoremap <C-Del> :tabc<CR>
+" Move between split windows
+nmap <C-h>	<C-w>h
+nmap <C-j>	<C-w>j
+nmap <C-k>	<C-w>k
+nmap <C-l>	<C-w>l
+
+" Tab navigation 
+nmap <C-t> gt
+nmap <C-q> :tabclose<CR>
 
 call plug#begin('~/.local/share/nvim/site/plugged')
 " Vim Settings
@@ -21,16 +30,20 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug '907th/vim-auto-save'
 Plug 'terryma/vim-smooth-scroll'
-Plug 'scrooloose/nerdtree'
+Plug 'nvim-tree/nvim-tree.lua'
+Plug 'nvim-tree/nvim-web-devicons'
+"
+" Tabs
+Plug 'lewis6991/gitsigns.nvim' " OPTIONAL: for git status
+Plug 'nvim-tree/nvim-web-devicons' " OPTIONAL: for file icons
+Plug 'romgrk/barbar.nvim'
 "
 " Editing
-" Plug 'terryma/vim-multiple-cursors' (Deprecated)
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-surround'
 "
 " Git
-Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 " 
@@ -75,7 +88,7 @@ Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'L3MON4D3/LuaSnip' 
 Plug 'folke/lsp-colors.nvim'
 Plug 'folke/trouble.nvim'
-Plug 'nvim-tree/nvim-web-devicons'
+"
 " Autocomplete 
 Plug 'github/copilot.vim'
 "
@@ -93,35 +106,7 @@ noremap <silent> <c-f> :call smooth_scroll#down(&scroll*2, 10, 5)<CR>
 noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 10, 3)<CR>
 noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 10, 3)<CR>
 
-" Move between split windows
-nmap <C-h>	<C-w>h
-nmap <C-j>	<C-w>j
-nmap <C-k>	<C-w>k
-nmap <C-l>	<C-w>l
-
-" Theme
-colorscheme nightfly 
-" colorscheme moonfly
-" colorscheme onedarkhc
-" colorscheme onehalfdark
-" let g:airline_theme='onedark'
-
-" NerdTree
-function MirrorNerdTreeIfOneWindow()
-  if winnr("$") < 2
-    NERDTreeMirror
-
-    " hack to move the focus from the NERDTree to the main window
-    wincmd p
-    wincmd l
-  endif
-endfunction
-
-map <C-n> :NERDTreeToggle<CR>
-" autocmd VimEnter * silent NERDTreeVCS | wincmd p
-" autocmd GuiEnter * silent NERDTreeVCS
-autocmd TabEnter * silent exe MirrorNerdTreeIfOneWindow()
-let NERDTreeShowHidden=1
+map gn :NvimTreeFocus<CR>
 
 autocmd FileType qf setlocal wrap
 
@@ -130,3 +115,5 @@ autocmd FileType qf setlocal wrap
 " let g:prettier#autoformat_require_pragma = 0
 " map <silent> <c-P> :Prettier<CR>
 
+let g:copilot_no_tab_map = v:true
+imap <expr> <Plug>(vimrc:copilot-dummy-map) copilot#Accept("\<Tab>")

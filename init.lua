@@ -44,7 +44,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
         vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
         vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
         vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-        vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+        vim.keymap.set('n', '<space>k', vim.lsp.buf.signature_help, opts)
         vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
         vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
         vim.keymap.set('n', '<space>wl', function()
@@ -87,6 +87,13 @@ local has_words_before = function()
   return col ~= 0 and vim.api.nvim_buf_get_text(0, line-1, 0, line-1, col, {})[1]:match("^%s*$") == nil
 end
 
+-- copilot setup
+require("copilot").setup({
+    suggestion = {
+        auto_trigger = true,
+    },
+})
+
 -- nvim-cmp setup
 local cmp = require 'cmp'
 cmp.setup {
@@ -105,18 +112,21 @@ cmp.setup {
             select = true,
         },
         ['<Tab>'] = cmp.mapping(function(fallback)
-            local copilot_keys = vim.fn['copilot#Accept']()
-            -- if cmp.visible() and has_words_before() then
-        	--     cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-	        -- else
-            if cmp.visible() then
-                cmp.select_next_item()
+            -- local copilot_keys = vim.fn['copilot#Accept']()
+            if require("copilot.suggestion").is_visible() then
+                require("copilot.suggestion").accept()
+	elseif cmp.visible() then
+                cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
             elseif luasnip.expand_or_jumpable() then
                 luasnip.expand_or_jump()
-            elseif copilot_keys ~= '' and type(copilot_keys) == 'string' then
-                vim.api.nvim_feedkeys(copilot_keys, 'i', true)
-            else 
+            elseif has_words_before() then
+                cmp.complete()
+            else
                 fallback()
+            -- elseif copilot_keys ~= '' and type(copilot_keys) == 'string' then
+            --     vim.api.nvim_feedkeys(copilot_keys, 'i', true)
+            -- else 
+            --    fallback()
             end
         end, { 'i', 's' }),
         ['<S-Tab>'] = cmp.mapping(function(fallback)
@@ -144,3 +154,5 @@ vim.cmd [[colorscheme nightfly]]
 
 -- Nvimtree
 require("nvim-tree").setup()
+
+require("trouble").setup()

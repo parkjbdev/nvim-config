@@ -12,7 +12,13 @@ set cursorline
 set autochdir
 set termguicolors
 set foldmethod=indent
-set backspace=indent,eol,start
+set foldlevel=1
+
+augroup numbertoggle
+    autocmd!
+    autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
+    autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
+augroup END
 
 " Move between split windows
 nmap <C-h>	<C-w>h
@@ -23,6 +29,10 @@ nmap <C-l>	<C-w>l
 " Tab navigation 
 nmap <C-t> gt
 nmap <C-q> :tabclose<CR>
+
+" Buffer navigation
+nmap [b :bprevious<CR>
+nmap ]b :bnext<CR>
 
 call plug#begin('~/.local/share/nvim/site/plugged')
 " Vim Settings
@@ -90,7 +100,8 @@ Plug 'folke/lsp-colors.nvim'
 Plug 'folke/trouble.nvim'
 "
 " Autocomplete 
-Plug 'github/copilot.vim'
+" Plug 'github/copilot.vim'
+Plug 'zbirenbaum/copilot.lua'
 "
 " Misc 
 Plug 'wakatime/vim-wakatime'
@@ -115,5 +126,3 @@ autocmd FileType qf setlocal wrap
 " let g:prettier#autoformat_require_pragma = 0
 " map <silent> <c-P> :Prettier<CR>
 
-let g:copilot_no_tab_map = v:true
-imap <expr> <Plug>(vimrc:copilot-dummy-map) copilot#Accept("\<Tab>")

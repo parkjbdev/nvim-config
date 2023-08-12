@@ -1,25 +1,109 @@
 local vimrc = vim.fn.stdpath("config") .. "/vimrc.vim"
 vim.cmd.source(vimrc)
 
--- Setup language servers.
-local lspconfig = require('lspconfig')
-lspconfig.pyright.setup {}
-lspconfig.tsserver.setup {}
-lspconfig.rust_analyzer.setup {
-    -- Server-specific settings. See `:help lspconfig-setup`
-    settings = {
-        ['rust-analyzer'] = {},
-    },
-}
-lspconfig.clangd.setup {
-    -- Server-specific settings. See `:help lspconfig-setup`
-    settings = {
-        clangd = {
-            -- Enable semantic highlighting
-            semanticHighlighting = true,
+-- Setup lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+    vim.fn.system({
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "https://github.com/folke/lazy.nvim.git",
+        "--branch=stable", -- latest stable release
+        lazypath,
+    })
+end
+vim.opt.rtp:prepend(lazypath)
+
+require("lazy").setup({
+    -- Vim Settings
+    { "vim-airline/vim-airline" },
+    { "vim-airline/vim-airline-themes" },
+    { "907th/vim-auto-save" },
+    { "terryma/vim-smooth-scroll" },
+    { "nvim-tree/nvim-tree.lua", 
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+        require("nvim-tree").setup()
+    end,},
+
+    -- Tabs
+    {
+        'romgrk/barbar.nvim',
+        dependencies = {
+            'lewis6991/gitsigns.nvim', -- OPTIONAL: for git status
+            'nvim-tree/nvim-web-devicons', -- OPTIONAL: for file icons
         },
+        init = function() vim.g.barbar_auto_setup = false end,
     },
-}
+    -- 
+    -- Editing
+    { "mg979/vim-visual-multi" },
+    { "jiangmiao/auto-pairs" },
+    { "tpope/vim-surround" },
+
+    -- Git
+    { "airblade/vim-gitgutter" },
+    { "tpope/vim-fugitive" },
+
+    -- Formatting
+    -- Plug 'junegunn/vim-easy-align'
+    { "vim-autoformat/vim-autoformat" },
+
+    -- THEMES
+    { "bluz71/vim-nightfly-colors", name = "nightfly", lazy = false, priority = 1000 },
+    -- Plug 'sonph/onehalf', { 'rtp': 'vim/' }
+    -- Plug 'bluz71/vim-moonfly-colors', {'as': 'moonfly'}
+    -- Plug 'pacokwon/onedarkhc.vim'
+
+    -- WEB
+    { "prettier/vim-prettier" },
+    { "leafOfTree/vim-matchtag" },
+    -- Plug 'valloric/matchtagalways'
+    -- Plug 'mattn/emmet-vim'
+    -- Plug 'peitalin/vim-jsx-typescript'
+    -- Plug 'leafgarland/typescript-vim'
+
+    -- C/C++
+    { "sakhnik/nvim-gdb" },
+    --
+    -- Snippets 
+    -- Plug 'SirVer/ultisnips'
+    -- Plug 'honza/vim-snippets'
+
+    -- LSP
+    -- Plug 'w0rp/ale'
+    -- Plug 'prabirshrestha/async.vim'
+    -- Plug 'prabirshrestha/vim-lsp'
+    -- Plug 'mattn/vim-lsp-settings'
+    -- Plug 'prabirshrestha/asyncomplete.vim'
+    -- Plug 'prabirshrestha/asyncomplete-lsp.vim'
+    -- Plug 'keremc/asyncomplete-clang.vim'
+    -- Plug 'ray-x/lsp_signature.nvim'
+    { "neovim/nvim-lspconfig" },
+    { "hrsh7th/nvim-cmp" },
+    { "hrsh7th/cmp-nvim-lsp" },
+    { "saadparwaiz1/cmp_luasnip" },
+    { "L3MON4D3/LuaSnip" },
+    { "folke/lsp-colors.nvim" },
+    { "folke/trouble.nvim", config = function() require("trouble").setup() end },
+    --
+    -- Autocomplete 
+    -- Plug 'github/copilot.vim'
+    { 
+        "zbirenbaum/copilot.lua", 
+        config = function() 
+            require("copilot").setup({
+                suggestion = {
+                    auto_trigger = true,
+                },
+            })
+        end 
+    },
+    --
+    -- Misc 
+    { "wakatime/vim-wakatime" },
+})
 
 
 -- Global mappings.
@@ -66,11 +150,12 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end,
 })
 
+-- Setup language servers.
 -- Add additional capabilities supported by nvim-cmp
-local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
 -- Enable some language servers with the additional completion capabilities offered by nvim-cmp
+local lspconfig = require('lspconfig')
 local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver' }
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
 for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup {
         -- on_attach = my_custom_on_attach,
@@ -78,24 +163,33 @@ for _, lsp in ipairs(servers) do
     }
 end
 
+lspconfig.rust_analyzer.setup {
+    -- Server-specific settings. See `:help lspconfig-setup`
+    settings = {
+        ['rust-analyzer'] = {},
+    },
+}
+lspconfig.clangd.setup {
+    -- Server-specific settings. See `:help lspconfig-setup`
+    settings = {
+        clangd = {
+            -- Enable semantic highlighting
+            semanticHighlighting = true,
+        },
+    },
+}
+
 -- luasnip setup
-local luasnip = require 'luasnip'
+local luasnip = require('luasnip')
 
 local has_words_before = function()
-  if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
-  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-  return col ~= 0 and vim.api.nvim_buf_get_text(0, line-1, 0, line-1, col, {})[1]:match("^%s*$") == nil
+    if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
+    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+    return col ~= 0 and vim.api.nvim_buf_get_text(0, line-1, 0, line-1, col, {})[1]:match("^%s*$") == nil
 end
 
--- copilot setup
-require("copilot").setup({
-    suggestion = {
-        auto_trigger = true,
-    },
-})
-
--- nvim-cmp setup
-local cmp = require 'cmp'
+-- nvim-completion setup
+local cmp = require('cmp')
 cmp.setup {
     snippet = {
         expand = function(args)
@@ -112,30 +206,17 @@ cmp.setup {
             select = true,
         },
         ['<Tab>'] = cmp.mapping(function(fallback)
-            -- local copilot_keys = vim.fn['copilot#Accept']()
-            if require("copilot.suggestion").is_visible() then
-                require("copilot.suggestion").accept()
-	elseif cmp.visible() then
-                cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
-            elseif luasnip.expand_or_jumpable() then
-                luasnip.expand_or_jump()
-            elseif has_words_before() then
-                cmp.complete()
-            else
-                fallback()
-            -- elseif copilot_keys ~= '' and type(copilot_keys) == 'string' then
-            --     vim.api.nvim_feedkeys(copilot_keys, 'i', true)
-            -- else 
-            --    fallback()
+            if require("copilot.suggestion").is_visible() then require("copilot.suggestion").accept()
+            elseif cmp.visible() then cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
+            elseif luasnip.expand_or_jumpable() then luasnip.expand_or_jump()
+            elseif has_words_before() then cmp.complete()
+            else fallback()
             end
         end, { 'i', 's' }),
         ['<S-Tab>'] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-                cmp.select_prev_item()
-            elseif luasnip.jumpable(-1) then
-                luasnip.jump(-1)
-            else
-                fallback()
+            if cmp.visible() then cmp.select_prev_item()
+            elseif luasnip.jumpable(-1) then luasnip.jump(-1)
+            else fallback()
             end
         end, { 'i', 's' }),
     }),
@@ -152,7 +233,3 @@ vim.diagnostic.config({
 })
 vim.cmd [[colorscheme nightfly]]
 
--- Nvimtree
-require("nvim-tree").setup()
-
-require("trouble").setup()

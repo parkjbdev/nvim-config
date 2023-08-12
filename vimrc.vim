@@ -34,79 +34,8 @@ nmap <C-q> :tabclose<CR>
 nmap [b :bprevious<CR>
 nmap ]b :bnext<CR>
 
-call plug#begin('~/.local/share/nvim/site/plugged')
-" Vim Settings
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug '907th/vim-auto-save'
-Plug 'terryma/vim-smooth-scroll'
-Plug 'nvim-tree/nvim-tree.lua'
-Plug 'nvim-tree/nvim-web-devicons'
-"
-" Tabs
-Plug 'lewis6991/gitsigns.nvim' " OPTIONAL: for git status
-Plug 'nvim-tree/nvim-web-devicons' " OPTIONAL: for file icons
-Plug 'romgrk/barbar.nvim'
-"
-" Editing
-Plug 'mg979/vim-visual-multi', {'branch': 'master'}
-Plug 'jiangmiao/auto-pairs'
-Plug 'tpope/vim-surround'
-"
-" Git
-Plug 'airblade/vim-gitgutter'
-Plug 'tpope/vim-fugitive'
-" 
-" Formatting
-" Plug 'junegunn/vim-easy-align'
-Plug 'vim-autoformat/vim-autoformat'
-"
-" THEMES
-Plug 'bluz71/vim-nightfly-colors', { 'as': 'nightfly' }
-" Plug 'sonph/onehalf', { 'rtp': 'vim/' }
-" Plug 'bluz71/vim-moonfly-colors', {'as': 'moonfly'}
-" Plug 'pacokwon/onedarkhc.vim'
-"
-" WEB
-Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
-Plug 'leafOfTree/vim-matchtag'
-" Plug 'valloric/matchtagalways'
-" Plug 'mattn/emmet-vim'
-" Plug 'peitalin/vim-jsx-typescript'
-" Plug 'leafgarland/typescript-vim'
-"
-" C/C++
-Plug 'sakhnik/nvim-gdb', { 'do': ':!./install.sh' }
-"
-" Snippets 
-" Plug 'SirVer/ultisnips'
-" Plug 'honza/vim-snippets'
-"
-" LSP
-" Plug 'w0rp/ale'
-" Plug 'prabirshrestha/async.vim'
-" Plug 'prabirshrestha/vim-lsp'
-" Plug 'mattn/vim-lsp-settings'
-" Plug 'prabirshrestha/asyncomplete.vim'
-" Plug 'prabirshrestha/asyncomplete-lsp.vim'
-" Plug 'keremc/asyncomplete-clang.vim'
-" Plug 'ray-x/lsp_signature.nvim'
-Plug 'neovim/nvim-lspconfig'
-Plug 'hrsh7th/nvim-cmp'
-Plug 'hrsh7th/cmp-nvim-lsp'
-Plug 'saadparwaiz1/cmp_luasnip'
-Plug 'L3MON4D3/LuaSnip' 
-Plug 'folke/lsp-colors.nvim'
-Plug 'folke/trouble.nvim'
-"
-" Autocomplete 
-" Plug 'github/copilot.vim'
-Plug 'zbirenbaum/copilot.lua'
-"
-" Misc 
-Plug 'wakatime/vim-wakatime'
-
-call plug#end()
+" GitGutter
+nmap <Leader>u :GitGutterUndoHunk<CR>
 
 " AutoSave
 let g:auto_save=1

@@ -30,12 +30,9 @@ nmap <C-l>	<C-w>l
 nmap <C-t> gt
 nmap <C-q> :tabclose<CR>
 
-" Buffer navigation
-nmap [b :bprevious<CR>
-nmap ]b :bnext<CR>
-
 " GitGutter
-nmap <Leader>u :GitGutterUndoHunk<CR>
+nmap <Leader>gu :GitGutterUndoHunk<CR>
+nmap <Leader>gp :GitGutterPreviewHunk<CR>
 
 " AutoSave
 let g:auto_save=1

@@ -214,7 +214,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 -- Add additional capabilities supported by nvim-cmp
 -- Enable some language servers with the additional completion capabilities offered by nvim-cmp
 local lspconfig = require('lspconfig')
-local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver' }
+local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'dartls' }
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 for _, lsp in ipairs(servers) do
     lspconfig[lsp].setup {

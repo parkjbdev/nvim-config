@@ -9,7 +9,6 @@ set tabpagemax=20
 set updatetime=100
 set number
 set cursorline
-set autochdir
 set termguicolors
 set foldmethod=indent
 set foldlevel=1

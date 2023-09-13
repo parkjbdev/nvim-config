@@ -23,8 +23,8 @@ require("lazy").setup({
     { "terryma/vim-smooth-scroll" },
 
     -- Exploring Files
-    { 
-        "nvim-tree/nvim-tree.lua", 
+    {
+        "nvim-tree/nvim-tree.lua",
         dependencies = { "nvim-tree/nvim-web-devicons" },
         config = function()
             require("nvim-tree").setup({
@@ -39,35 +39,35 @@ require("lazy").setup({
     {
         'romgrk/barbar.nvim',
         dependencies = {
-            'lewis6991/gitsigns.nvim', -- OPTIONAL: for git status
+            'lewis6991/gitsigns.nvim',     -- OPTIONAL: for git status
             'nvim-tree/nvim-web-devicons', -- OPTIONAL: for file icons
         },
         lazy = false,
         keys = {
             -- Move to previous/next
-            { '<A-,>', '<Cmd>BufferPrevious<CR>' },
-            { '<A-.>', '<Cmd>BufferNext<CR>' },
-            { '[b', '<Cmd>BufferPrevious<CR>' },
-            { ']b', '<Cmd>BufferNext<CR>' },
-            { '<A-Tab>', '<Cmd>BufferNext<CR>' },
+            { '<A-,>',     '<Cmd>BufferPrevious<CR>' },
+            { '<A-.>',     '<Cmd>BufferNext<CR>' },
+            { '[b',        '<Cmd>BufferPrevious<CR>' },
+            { ']b',        '<Cmd>BufferNext<CR>' },
+            { '<A-Tab>',   '<Cmd>BufferNext<CR>' },
             -- Re-order to previous/next
-            { '<A-<>', '<Cmd>BufferMovePrevious<CR>' },
-            { '<A->>', '<Cmd>BufferMoveNext<CR>' },
+            { '<A-<>',     '<Cmd>BufferMovePrevious<CR>' },
+            { '<A->>',     '<Cmd>BufferMoveNext<CR>' },
             -- Goto buffer in position...
-            { '<A-1>', '<Cmd>BufferGoto 1<CR>' },
-            { '<A-2>', '<Cmd>BufferGoto 2<CR>' },
-            { '<A-3>', '<Cmd>BufferGoto 3<CR>' },
-            { '<A-4>', '<Cmd>BufferGoto 4<CR>' },
-            { '<A-5>', '<Cmd>BufferGoto 5<CR>' },
-            { '<A-6>', '<Cmd>BufferGoto 6<CR>' },
-            { '<A-7>', '<Cmd>BufferGoto 7<CR>' },
-            { '<A-8>', '<Cmd>BufferGoto 8<CR>' },
-            { '<A-9>', '<Cmd>BufferGoto 9<CR>' },
-            { '<A-0>', '<Cmd>BufferLast<CR>' },
+            { '<A-1>',     '<Cmd>BufferGoto 1<CR>' },
+            { '<A-2>',     '<Cmd>BufferGoto 2<CR>' },
+            { '<A-3>',     '<Cmd>BufferGoto 3<CR>' },
+            { '<A-4>',     '<Cmd>BufferGoto 4<CR>' },
+            { '<A-5>',     '<Cmd>BufferGoto 5<CR>' },
+            { '<A-6>',     '<Cmd>BufferGoto 6<CR>' },
+            { '<A-7>',     '<Cmd>BufferGoto 7<CR>' },
+            { '<A-8>',     '<Cmd>BufferGoto 8<CR>' },
+            { '<A-9>',     '<Cmd>BufferGoto 9<CR>' },
+            { '<A-0>',     '<Cmd>BufferLast<CR>' },
             -- Pin/unpin buffer
-            { '<A-p>', '<Cmd>BufferPin<CR>' },
+            { '<A-p>',     '<Cmd>BufferPin<CR>' },
             -- Close buffer
-            { '<A-w>', '<Cmd>BufferClose<CR>' },
+            { '<A-w>',     '<Cmd>BufferClose<CR>' },
             -- Wipeout buffer
             --                 :BufferWipeout
             -- Close commands
@@ -77,7 +77,7 @@ require("lazy").setup({
             --                 :BufferCloseBuffersLeft
             --                 :BufferCloseBuffersRight
             -- Magic buffer-picking mode
-            { '<C-p>', '<Cmd>BufferPick<CR>' },
+            { '<C-p>',     '<Cmd>BufferPick<CR>' },
             -- Sort automatically by...
             { '<Space>bb', '<Cmd>BufferOrderByBufferNumber<CR>' },
             { '<Space>bd', '<Cmd>BufferOrderByDirectory<CR>' },
@@ -85,8 +85,8 @@ require("lazy").setup({
             { '<Space>bw', '<Cmd>BufferOrderByWindowNumber<CR>' },
         }
     },
-    { "junegunn/fzf", dir = "~/.fzf", build = "./install --all" },
-    { 
+    { "junegunn/fzf",                 dir = "/opt/homebrew/opt/fzf", build = "./install --all" },
+    {
         "junegunn/fzf.vim",
         keys = {
             { "<Leader>ff", ":Files<CR>" },
@@ -110,23 +110,39 @@ require("lazy").setup({
     { "vim-autoformat/vim-autoformat" },
 
     -- THEMES
-    { "bluz71/vim-nightfly-colors", name = "nightfly", lazy = false, priority = 1000 },
+    {
+        "bluz71/vim-nightfly-colors",
+        name = "nightfly",
+        lazy = false,
+        priority = 1000
+    },
     -- Plug 'sonph/onehalf', { 'rtp': 'vim/' }
     -- Plug 'bluz71/vim-moonfly-colors', {'as': 'moonfly'}
     -- Plug 'pacokwon/onedarkhc.vim'
 
     -- WEB
-    { "prettier/vim-prettier" },
+    -- { "prettier/vim-prettier" },
     { "leafOfTree/vim-matchtag" },
-    -- Plug 'valloric/matchtagalways'
-    -- Plug 'mattn/emmet-vim'
+    -- { 'valloric/matchtagalways' },
+    -- { "mattn/emmet-vim" },
     -- Plug 'peitalin/vim-jsx-typescript'
     -- Plug 'leafgarland/typescript-vim'
 
     -- C/C++
     { "sakhnik/nvim-gdb" },
+
+    -- Flutter
+    {
+        'akinsho/flutter-tools.nvim',
+        lazy = false,
+        dependencies = {
+            'nvim-lua/plenary.nvim',
+            'stevearc/dressing.nvim', -- optional for vim.ui.select
+        },
+        config = true,
+    },
     --
-    -- Snippets 
+    -- Snippets
     -- Plug 'SirVer/ultisnips'
     -- Plug 'honza/vim-snippets'
 
@@ -140,27 +156,67 @@ require("lazy").setup({
     -- Plug 'keremc/asyncomplete-clang.vim'
     -- Plug 'ray-x/lsp_signature.nvim'
     { "neovim/nvim-lspconfig" },
+    {
+        "williamboman/mason.nvim",
+        config = function()
+            require("mason").setup({
+                ui = {
+                    icons = {
+                        package_installed = "✓",
+                        package_pending = "➜",
+                        package_uninstalled = "✗"
+                    }
+                }
+            })
+        end
+    },
+    {
+        "williamboman/mason-lspconfig.nvim",
+        config = function()
+            require("mason-lspconfig").setup({
+                ensure_installed = {
+                    "lua_ls", "asm_lsp", "clangd", "rust_analyzer",
+                    -- python
+                    "pyright",
+                    -- web
+                    "tsserver", "emmet_ls",
+                },
+                automatic_installation = true,
+                handlers = {
+                    function(server)
+                        local capabilities = require("cmp_nvim_lsp").default_capabilities()
+                        require("lspconfig")[server].setup({
+                            capabilities = capabilities,
+                        })
+                    end
+                }
+            })
+        end
+    },
     { "hrsh7th/nvim-cmp" },
     { "hrsh7th/cmp-nvim-lsp" },
     { "saadparwaiz1/cmp_luasnip" },
     { "L3MON4D3/LuaSnip" },
+    { "folke/neodev.nvim",       opts = {} },
     { "folke/lsp-colors.nvim" },
-    { "folke/trouble.nvim", config = function() require("trouble").setup() end },
-    --
-    -- Autocomplete 
-    -- Plug 'github/copilot.vim'
-    { 
-        "zbirenbaum/copilot.lua", 
-        config = function() 
+    {
+        "folke/trouble.nvim",
+        config = function() require("trouble").setup() end
+    },
+
+    -- Autocomplete
+    {
+        "zbirenbaum/copilot.lua",
+        config = function()
             require("copilot").setup({
                 suggestion = {
                     auto_trigger = true,
                 },
             })
-        end 
+        end
     },
-    --
-    -- Misc 
+
+    -- Misc
     { "wakatime/vim-wakatime" },
 
 })
@@ -201,64 +257,34 @@ vim.api.nvim_create_autocmd('LspAttach', {
         vim.keymap.set('n', '<space>f', function()
             vim.lsp.buf.format { async = true }
         end, opts)
-        vim.keymap.set('n', '<space>qf', function() 
+        vim.keymap.set('n', '<space>qf', function()
             vim.lsp.buf.code_action({
-                filter = function(a) return a.isPreferred end, 
+                filter = function(a) return a.isPreferred end,
                 apply = true
             })
         end, opts)
     end,
 })
 
--- Setup language servers.
--- Add additional capabilities supported by nvim-cmp
--- Enable some language servers with the additional completion capabilities offered by nvim-cmp
-local lspconfig = require('lspconfig')
-local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'dartls' }
-local capabilities = require("cmp_nvim_lsp").default_capabilities()
-for _, lsp in ipairs(servers) do
-    lspconfig[lsp].setup {
-        -- on_attach = my_custom_on_attach,
-        capabilities = capabilities,
-    }
-end
-
-lspconfig.rust_analyzer.setup {
-    -- Server-specific settings. See `:help lspconfig-setup`
-    settings = {
-        ['rust-analyzer'] = {},
-    },
-}
-lspconfig.clangd.setup {
-    -- Server-specific settings. See `:help lspconfig-setup`
-    settings = {
-        clangd = {
-            -- Enable semantic highlighting
-            semanticHighlighting = true,
-        },
-    },
-}
-
 -- luasnip setup
 local luasnip = require('luasnip')
 
 local has_words_before = function()
     if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
-    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-    return col ~= 0 and vim.api.nvim_buf_get_text(0, line-1, 0, line-1, col, {})[1]:match("^%s*$") == nil
+    local line, col = table.unpack(vim.api.nvim_win_get_cursor(0))
+    return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
 end
 
 -- nvim-completion setup
 local cmp = require('cmp')
+local copilot = require('copilot.suggestion')
 cmp.setup {
     snippet = {
-        expand = function(args)
-            luasnip.lsp_expand(args.body)
-        end,
+        expand = function(args) luasnip.lsp_expand(args.body) end,
     },
     mapping = cmp.mapping.preset.insert({
         ['<C-u>'] = cmp.mapping.scroll_docs(-4), -- Up
-        ['<C-d>'] = cmp.mapping.scroll_docs(4), -- Down
+        ['<C-d>'] = cmp.mapping.scroll_docs(4),  -- Down
         -- C-b (back) C-f (forward) for snippet placeholder navigation.
         ['<C-Space>'] = cmp.mapping.complete(),
         ['<CR>'] = cmp.mapping.confirm {
@@ -266,17 +292,27 @@ cmp.setup {
             select = true,
         },
         ['<Tab>'] = cmp.mapping(function(fallback)
-            if require("copilot.suggestion").is_visible() then require("copilot.suggestion").accept()
-            elseif cmp.visible() then cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
-            elseif luasnip.expand_or_jumpable() then luasnip.expand_or_jump()
-            elseif has_words_before() then cmp.complete()
-            else fallback()
+            if copilot.is_visible() and cmp.visible() then
+                cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
+            elseif copilot.is_visible() then
+                require("copilot.suggestion").accept()
+            elseif cmp.visible() then
+                cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
+            elseif luasnip.expand_or_jumpable() then
+                luasnip.expand_or_jump()
+            elseif has_words_before() then
+                cmp.complete()
+            else
+                fallback()
             end
         end, { 'i', 's' }),
         ['<S-Tab>'] = cmp.mapping(function(fallback)
-            if cmp.visible() then cmp.select_prev_item()
-            elseif luasnip.jumpable(-1) then luasnip.jump(-1)
-            else fallback()
+            if cmp.visible() then
+                cmp.select_prev_item()
+            elseif luasnip.jumpable(-1) then
+                luasnip.jump(-1)
+            else
+                fallback()
             end
         end, { 'i', 's' }),
     }),
@@ -286,16 +322,9 @@ cmp.setup {
     },
 }
 
--- barbar setup
-local map = vim.api.nvim_set_keymap
-local opts = { noremap = true, silent = true }
-
-vim.keymap.set('n', '<Leader>/', '<Cmd>Commentary<CR>', opts)
-
 -- Theme setup
 vim.g.nightflyVirtualTextColor = true
 vim.diagnostic.config({
     underline = true,
 })
 vim.cmd [[colorscheme nightfly]]
-

@@ -85,7 +85,7 @@ require("lazy").setup({
             { '<Space>bw', '<Cmd>BufferOrderByWindowNumber<CR>' },
         }
     },
-    { "junegunn/fzf",                 dir = "/opt/homebrew/opt/fzf", build = "./install --all" },
+    { "junegunn/fzf",          dir = "/opt/homebrew/opt/fzf", build = "./install --all" },
     {
         "junegunn/fzf.vim",
         keys = {
@@ -105,10 +105,6 @@ require("lazy").setup({
     { "airblade/vim-gitgutter" },
     { "tpope/vim-fugitive" },
 
-    -- Formatting
-    -- Plug 'junegunn/vim-easy-align'
-    { "vim-autoformat/vim-autoformat" },
-
     -- THEMES
     {
         "bluz71/vim-nightfly-colors",
@@ -121,15 +117,99 @@ require("lazy").setup({
     -- Plug 'pacokwon/onedarkhc.vim'
 
     -- WEB
-    -- { "prettier/vim-prettier" },
     { "leafOfTree/vim-matchtag" },
-    -- { 'valloric/matchtagalways' },
-    -- { "mattn/emmet-vim" },
-    -- Plug 'peitalin/vim-jsx-typescript'
-    -- Plug 'leafgarland/typescript-vim'
 
     -- C/C++
-    { "sakhnik/nvim-gdb" },
+    {
+        "mfussenegger/nvim-dap",
+        keys = {
+            { '<F5>',       function() require('dap').continue() end },
+            { '<F10>',      function() require('dap').step_over() end },
+            { '<F11>',      function() require('dap').step_into() end },
+            { '<F12>',      function() require('dap').step_out() end },
+            { '<Leader>b',  function() require('dap').toggle_breakpoint() end },
+            { '<F8>',       function() require('dap').toggle_breakpoint() end },
+            { '<Leader>B',  function() require('dap').set_breakpoint() end },
+            { '<Leader>lp', function() require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end },
+            { '<Leader>dr', function() require('dap').repl.open() end },
+            { '<Leader>dl', function() require('dap').run_last() end },
+            { '<Leader>dh', function() require('dap.ui.widgets').hover() end, { 'n',
+                'v' } },
+            { '<Leader>dp', function() require('dap.ui.widgets').preview() end, { 'n',
+                'v' } },
+            { '<Leader>df', function() require('dap.ui.widgets').centered_float(widgets.frames) end },
+            { '<Leader>ds', function() require('dap.ui.widgets').centered_float(widgets.scopes) end },
+        },
+        dependencies = {
+            { "nvim-treesitter/nvim-treesitter", cmd = "TSUpdate" },
+            { "theHamsta/nvim-dap-virtual-text", config = function() require("nvim-dap-virtual-text").setup() end },
+            {
+                "rcarriga/nvim-dap-ui",
+                config = function() require("dapui").setup() end,
+                dependencies = { { "ChristianChiarulli/neovim-codicons" } }
+            },
+        },
+        config = function()
+            local dap, dapui = require("dap"), require("dapui")
+            dap.listeners.after.event_initialized["dapui_config"] = function() dapui.open() end
+            dap.listeners.before.event_terminated["dapui_config"] = function() dapui.close() end
+            dap.listeners.before.event_exited["dapui_config"] = function() dapui.close() end
+            dap.adapters.cppdbg = {
+                id = 'cppdbg',
+                type = 'executable',
+                command = '/home/parkjb/.cpptools/extension/debugAdapters/bin/OpenDebugAD7',
+            }
+
+            dap.configurations.cpp = {
+                {
+                    name = "Launch file",
+                    type = "cppdbg",
+                    request = "launch",
+                    program = function()
+                        return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+                    end,
+                    cwd = '${workspaceFolder}',
+                    stopAtEntry = true,
+                },
+                {
+                    name = 'Attach to gdbserver :1234',
+                    type = 'cppdbg',
+                    request = 'launch',
+                    MIMode = 'gdb',
+                    miDebuggerServerAddress = 'localhost:1234',
+                    miDebuggerPath = '/usr/bin/gdb',
+                    cwd = '${workspaceFolder}',
+                    program = function()
+                        return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+                    end,
+                },
+            }
+            dap.configurations.c = {
+                {
+                    name = "Launch file",
+                    type = "cppdbg",
+                    request = "launch",
+                    program = function()
+                        return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+                    end,
+                    cwd = '${workspaceFolder}',
+                    stopAtEntry = true,
+                },
+                {
+                    name = 'Attach to gdbserver :1234',
+                    type = 'cppdbg',
+                    request = 'launch',
+                    MIMode = 'gdb',
+                    miDebuggerServerAddress = 'localhost:1234',
+                    miDebuggerPath = '/usr/bin/gdb',
+                    cwd = '${workspaceFolder}',
+                    program = function()
+                        return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+                    end,
+                },
+            }
+        end
+    },
 
     -- Flutter
     {
@@ -141,21 +221,14 @@ require("lazy").setup({
         },
         config = true,
     },
-    --
-    -- Snippets
-    -- Plug 'SirVer/ultisnips'
-    -- Plug 'honza/vim-snippets'
 
     -- LSP
-    -- Plug 'w0rp/ale'
-    -- Plug 'prabirshrestha/async.vim'
-    -- Plug 'prabirshrestha/vim-lsp'
-    -- Plug 'mattn/vim-lsp-settings'
-    -- Plug 'prabirshrestha/asyncomplete.vim'
-    -- Plug 'prabirshrestha/asyncomplete-lsp.vim'
-    -- Plug 'keremc/asyncomplete-clang.vim'
-    -- Plug 'ray-x/lsp_signature.nvim'
     { "neovim/nvim-lspconfig" },
+    {
+        "jose-elias-alvarez/null-ls.nvim",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        config = function() require("null-ls").setup() end
+    },
     {
         "williamboman/mason.nvim",
         config = function()
@@ -179,25 +252,68 @@ require("lazy").setup({
                     -- python
                     "pyright",
                     -- web
-                    "tsserver", "emmet_ls",
+                    "emmet_language_server"
                 },
                 automatic_installation = true,
                 handlers = {
                     function(server)
                         local capabilities = require("cmp_nvim_lsp").default_capabilities()
-                        require("lspconfig")[server].setup({
-                            capabilities = capabilities,
-                        })
+                        local lspconfig = require("lspconfig")
+                        lspconfig[server].setup({ capabilities = capabilities })
                     end
                 }
             })
         end
     },
+    {
+        "jay-babu/mason-null-ls.nvim",
+        event = { "BufReadPre", "BufNewFile" },
+        dependencies = {
+            "williamboman/mason.nvim",
+            "jose-elias-alvarez/null-ls.nvim"
+        },
+        config = function()
+            local mason_null_ls = require("mason-null-ls")
+            local null_ls = require("null-ls")
+            local prettierd = {
+                sources = {
+                    null_ls.builtins.formatting.prettier.with({
+                        filetypes = {
+                            "javascript", "javascriptreact", "typescript", "typescriptreact",
+                            "json", "yaml", "html", "css", "scss", "markdown", "vue"
+                        }
+                    }),
+                },
+                handler = function(source_name, methods)
+                    mason_null_ls.default_setup(source_name, methods) -- to maintain default behavior
+                end,
+            }
+
+            mason_null_ls.setup({
+                automatic_installation = true,
+                ensure_installed = {
+                    "prettierd"
+                },
+                sources = {
+                    prettierd.sources
+                },
+                handlers = {
+                    prettierd = prettierd.handler
+                },
+            })
+        end,
+    },
     { "hrsh7th/nvim-cmp" },
     { "hrsh7th/cmp-nvim-lsp" },
     { "saadparwaiz1/cmp_luasnip" },
-    { "L3MON4D3/LuaSnip" },
-    { "folke/neodev.nvim",       opts = {} },
+    {
+        "L3MON4D3/LuaSnip",
+        -- follow latest release.
+        version = "2.*", -- Replace <CurrentMajor> by the latest released major (first number of latest release)
+        -- install jsregexp (optional!).
+        build = "make install_jsregexp"
+    },
+    { "folke/neodev.nvim",    opts = {} },
     { "folke/lsp-colors.nvim" },
     {
         "folke/trouble.nvim",
@@ -218,10 +334,23 @@ require("lazy").setup({
 
     -- Misc
     { "wakatime/vim-wakatime" },
-
 })
 
+--------------------------------------------------------------------------------------------------------------
+-- LSP setup
+--
+local lspconfig = require('lspconfig')
+lspconfig["tsserver"].setup({
+    on_attach = function(client)
+        client.server_capabilities.documentFormattingProvider = false
+        client.server_capabilities.documentRangeFormattingProvider = false
+    end
+})
+--------------------------------------------------------------------------------------------------------------
 
+--------------------------------------------------------------------------------------------------------------
+-- KEYMAPS
+--
 -- Global mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
@@ -229,6 +358,7 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
 vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
 
+-- Lsp mappings
 -- Use LspAttach autocommand to only map the following keys
 -- after the language server attaches to the current buffer
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -265,13 +395,14 @@ vim.api.nvim_create_autocmd('LspAttach', {
         end, opts)
     end,
 })
+--------------------------------------------------------------------------------------------------------------
 
 -- luasnip setup
 local luasnip = require('luasnip')
 
 local has_words_before = function()
     if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
-    local line, col = table.unpack(vim.api.nvim_win_get_cursor(0))
+    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
     return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
 end
 
@@ -292,9 +423,7 @@ cmp.setup {
             select = true,
         },
         ['<Tab>'] = cmp.mapping(function(fallback)
-            if copilot.is_visible() and cmp.visible() then
-                cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
-            elseif copilot.is_visible() then
+            if copilot.is_visible() then
                 require("copilot.suggestion").accept()
             elseif cmp.visible() then
                 cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
@@ -322,9 +451,32 @@ cmp.setup {
     },
 }
 
--- Theme setup
+--------------------------------------------------------------------------------------------------------------
+-- UI setup
+
+-- DAP UI setup
+vim.api.nvim_set_hl(0, 'DapBreakpoint', { ctermbg = 0, fg = '#FF0000', bg = '#001C6D' })
+vim.api.nvim_set_hl(0, 'DapBreakpointLine', { ctermbg = 0, bg = '#001C6D' })
+vim.api.nvim_set_hl(0, 'DapLogPoint', { ctermbg = 0, fg = '#61afef', bg = '#001C6D' })
+vim.api.nvim_set_hl(0, 'DapLogPointLine', { ctermbg = 0, bg = '#001C6D' })
+vim.api.nvim_set_hl(0, 'DapStopped', { ctermbg = 0, fg = '#98c379', bg = '#31353f' })
+vim.api.nvim_set_hl(0, 'DapStoppedLine', { ctermbg = 0, bg = '#31353f' })
+
+vim.fn.sign_define('DapBreakpoint',
+    { text = '', texthl = 'DapBreakpoint', linehl = 'DapBreakpointLine', numhl = 'DapBreakpoint' })
+vim.fn.sign_define('DapBreakpointCondition',
+    { text = 'ﳁ', texthl = 'DapBreakpoint', linehl = 'DapBreakpointLine', numhl = 'DapBreakpoint' })
+vim.fn.sign_define('DapBreakpointRejected',
+    { text = '', texthl = 'DapBreakpoint', linehl = 'DapBreakpointLine', numhl = 'DapBreakpoint' })
+vim.fn.sign_define('DapLogPoint',
+    { text = '', texthl = 'DapLogPoint', linehl = 'DapLogPointLine', numhl = 'DapLogPoint' })
+vim.fn.sign_define('DapStopped',
+    { text = '', texthl = 'DapStopped', linehl = 'DapStoppedLine', numhl = 'DapStopped' })
+
+-- Theme
 vim.g.nightflyVirtualTextColor = true
 vim.diagnostic.config({
     underline = true,
 })
 vim.cmd [[colorscheme nightfly]]
+--------------------------------------------------------------------------------------------------------------

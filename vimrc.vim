@@ -12,6 +12,7 @@ set cursorline
 set termguicolors
 set foldmethod=indent
 set foldlevel=1
+set nofoldenable
 
 augroup numbertoggle
     autocmd!

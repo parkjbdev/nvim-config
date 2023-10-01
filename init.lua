@@ -16,6 +16,89 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
+    {
+        'glepnir/dashboard-nvim',
+        event = 'VimEnter',
+        config = function()
+            require('dashboard').setup {
+                -- config
+                theme = 'hyper',
+                config = {
+                    week_header = {
+                        enable = true,
+                    },
+                    shortcut = {
+                        { desc = '󰊳 Plugins', group = '@property', action = 'Lazy', key = 'p' },
+                        { desc = '󰊳 Update', group = '@property', action = 'Lazy update', key = 'u' },
+                        {
+                            icon = ' ',
+                            icon_hl = '@variable',
+                            desc = 'Files',
+                            group = 'Label',
+                            action = 'Telescope find_files',
+                            key = 'f',
+                        },
+                        {
+                            icon = ' ',
+                            desc = 'Project',
+                            group = 'Label',
+                            action = 'Telescope cder cwd=',
+                            key = 'F',
+                        },
+                    },
+                },
+                change_to_vcs_root = true,
+            }
+        end,
+        dependencies = {
+            { 'nvim-tree/nvim-web-devicons' }, -- init.lua:
+            { 'nvim-telescope/telescope.nvim' }
+        }
+    },
+    {
+        'nvim-telescope/telescope.nvim',
+        keys = {
+            { '<Leader>ff', ':Telescope find_files<CR>' },
+            { '<Leader>fg', ':Telescope live_grep<CR>' },
+            { '<Leader>fb', ':Telescope buffers<CR>' },
+            { '<Leader>fh', ':Telescope help_tags<CR>' },
+            { '<Leader>ft', ':Telescope tags<CR>' },
+        },
+        dependencies = { 'nvim-lua/plenary.nvim' },
+        config = function()
+            require("telescope").setup({
+                extensions = {
+                    cder = {
+                        command_executer = { 'zsh', '-c' },
+                        dir_command = { 'fd', '--type=d', '--max-depth=1', '.',
+                            os.getenv('HOME') .. '/Projects' },
+                        previewer_command = 'exa ' ..
+                            '-a ' ..
+                            '--color=always ' ..
+                            '-T ' ..
+                            '--level=3 ' ..
+                            '--icons ' ..
+                            '--git-ignore ' ..
+                            '--long ' ..
+                            '--no-permissions ' ..
+                            '--no-user ' ..
+                            '--no-filesize ' ..
+                            '--git ' ..
+                            '--ignore-glob=.git',
+                    }
+                }
+            })
+        end,
+    },
+    {
+        "nvim-telescope/telescope-file-browser.nvim",
+        dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
+    },
+    {
+        "zane-/cder.nvim",
+        dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
+        config = function() require("telescope").load_extension("cder") end,
+    },
     -- Vim Settings
     { "vim-airline/vim-airline" },
     { "vim-airline/vim-airline-themes" },
@@ -28,6 +111,11 @@ require("lazy").setup({
         dependencies = { "nvim-tree/nvim-web-devicons" },
         config = function()
             require("nvim-tree").setup({
+                disable_netrw = true,
+                sync_root_with_cwd = true,
+                renderer = {
+                    root_folder_label = false,
+                },
                 actions = {
                     open_file = {
                         quit_on_open = true,
@@ -85,15 +173,15 @@ require("lazy").setup({
             { '<Space>bw', '<Cmd>BufferOrderByWindowNumber<CR>' },
         }
     },
-    { "junegunn/fzf",          dir = "/opt/homebrew/opt/fzf", build = "./install --all" },
-    {
-        "junegunn/fzf.vim",
-        keys = {
-            { "<Leader>ff", ":Files<CR>" },
-            { "<Leader>fr", ":Rg<CR>" },
-            { "<Leader>ft", ":Tags<CR>" },
-        },
-    },
+    -- { "junegunn/fzf",          dir = "/opt/homebrew/opt/fzf", build = "./install --all" },
+    -- {
+    --     "junegunn/fzf.vim",
+    --     keys = {
+    --         -- { "<Leader>ff", ":Files<CR>" },
+    --         -- { "<Leader>fr", ":Rg<CR>" },
+    --         -- { "<Leader>ft", ":Tags<CR>" },
+    --     },
+    -- },
 
     -- Editing
     { "mg979/vim-visual-multi" },
@@ -210,6 +298,13 @@ require("lazy").setup({
             }
         end
     },
+    -- markdown
+    {
+        "iamcco/markdown-preview.nvim",
+        build = "cd app && yarn",
+        enabled = true,
+        ft = "markdown",
+    },
 
     -- Flutter
     {
@@ -303,6 +398,7 @@ require("lazy").setup({
             })
         end,
     },
+    { "jay-babu/mason-nvim-dap.nvim" },
     { "hrsh7th/nvim-cmp" },
     { "hrsh7th/cmp-nvim-lsp" },
     { "saadparwaiz1/cmp_luasnip" },
@@ -318,6 +414,20 @@ require("lazy").setup({
     {
         "folke/trouble.nvim",
         config = function() require("trouble").setup() end
+    },
+    {
+        "nvim-treesitter/nvim-treesitter",
+        build = ":TSUpdate",
+        config = function()
+            local configs = require("nvim-treesitter.configs")
+
+            configs.setup({
+                ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "elixir", "heex", "javascript", "html" },
+                sync_install = false,
+                highlight = { enable = true },
+                indent = { enable = true },
+            })
+        end
     },
 
     -- Autocomplete

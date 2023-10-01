@@ -180,15 +180,6 @@ require("lazy").setup({
             { "<Space>bw", "<Cmd>BufferOrderByWindowNumber<CR>" },
         },
     },
-    -- { "junegunn/fzf",          dir = "/opt/homebrew/opt/fzf", build = "./install --all" },
-    -- {
-    --     "junegunn/fzf.vim",
-    --     keys = {
-    --         -- { "<Leader>ff", ":Files<CR>" },
-    --         -- { "<Leader>fr", ":Rg<CR>" },
-    --         -- { "<Leader>ft", ":Tags<CR>" },
-    --     },
-    -- },
 
     -- Editing
     { "mg979/vim-visual-multi" },
@@ -332,60 +323,60 @@ require("lazy").setup({
             dap.listeners.before.event_exited["dapui_config"] = function()
                 dapui.close()
             end
-            dap.adapters.cppdbg = {
-                id = "cppdbg",
-                type = "executable",
-                command = "/home/parkjb/.cpptools/extension/debugAdapters/bin/OpenDebugAD7",
-            }
+            -- dap.adapters.cppdbg = {
+            -- 	id = "cppdbg",
+            -- 	type = "executable",
+            -- 	command = "/Users/parkjb/.cpptools/extension/debugAdapters/bin/OpenDebugAD7",
+            -- }
 
-            dap.configurations.cpp = {
-                {
-                    name = "Launch file",
-                    type = "cppdbg",
-                    request = "launch",
-                    program = function()
-                        return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-                    end,
-                    cwd = "${workspaceFolder}",
-                    stopAtEntry = true,
-                },
-                {
-                    name = "Attach to gdbserver :1234",
-                    type = "cppdbg",
-                    request = "launch",
-                    MIMode = "gdb",
-                    miDebuggerServerAddress = "localhost:1234",
-                    miDebuggerPath = "/usr/bin/gdb",
-                    cwd = "${workspaceFolder}",
-                    program = function()
-                        return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-                    end,
-                },
-            }
-            dap.configurations.c = {
-                {
-                    name = "Launch file",
-                    type = "cppdbg",
-                    request = "launch",
-                    program = function()
-                        return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-                    end,
-                    cwd = "${workspaceFolder}",
-                    stopAtEntry = true,
-                },
-                {
-                    name = "Attach to gdbserver :1234",
-                    type = "cppdbg",
-                    request = "launch",
-                    MIMode = "gdb",
-                    miDebuggerServerAddress = "localhost:1234",
-                    miDebuggerPath = "/usr/bin/gdb",
-                    cwd = "${workspaceFolder}",
-                    program = function()
-                        return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-                    end,
-                },
-            }
+            -- dap.configurations.cpp = {
+            -- 	{
+            -- 		name = "Launch file",
+            -- 		type = "cppdbg",
+            -- 		request = "launch",
+            -- 		program = function()
+            -- 			return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+            -- 		end,
+            -- 		cwd = "${workspaceFolder}",
+            -- 		stopAtEntry = true,
+            -- 	},
+            -- 	{
+            -- 		name = "Attach to gdbserver :1234",
+            -- 		type = "cppdbg",
+            -- 		request = "launch",
+            -- 		MIMode = "gdb",
+            -- 		miDebuggerServerAddress = "localhost:1234",
+            -- 		miDebuggerPath = "/usr/bin/gdb",
+            -- 		cwd = "${workspaceFolder}",
+            -- 		program = function()
+            -- 			return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+            -- 		end,
+            -- 	},
+            -- }
+            -- dap.configurations.c = {
+            -- 	{
+            -- 		name = "Launch file",
+            -- 		type = "cppdbg",
+            -- 		request = "launch",
+            -- 		program = function()
+            -- 			return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+            -- 		end,
+            -- 		cwd = "${workspaceFolder}",
+            -- 		stopAtEntry = true,
+            -- 	},
+            -- 	{
+            -- 		name = "Attach to gdbserver :1234",
+            -- 		type = "cppdbg",
+            -- 		request = "launch",
+            -- 		MIMode = "gdb",
+            -- 		miDebuggerServerAddress = "localhost:1234",
+            -- 		miDebuggerPath = "/usr/bin/gdb",
+            -- 		cwd = "${workspaceFolder}",
+            -- 		program = function()
+            -- 			return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+            -- 		end,
+            -- 	},
+            -- }
         end,
     },
     -- markdown
@@ -502,7 +493,22 @@ require("lazy").setup({
             })
         end,
     },
-    { "jay-babu/mason-nvim-dap.nvim" },
+    {
+        "jay-babu/mason-nvim-dap.nvim",
+        config = function()
+            require("mason-nvim-dap").setup({
+                automatic_installation = true,
+                ensure_installed = {
+                    "cpptools",
+                },
+                handlers = {
+                    function(config)
+                        require("mason-nvim-dap").default_setup(config)
+                    end,
+                },
+            })
+        end,
+    },
     { "hrsh7th/nvim-cmp" },
     { "hrsh7th/cmp-nvim-lsp" },
     { "saadparwaiz1/cmp_luasnip" },

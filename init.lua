@@ -77,7 +77,7 @@ require("lazy").setup({
                             ".",
                             os.getenv("HOME") .. "/Projects",
                         },
-                        previewer_command = "exa "
+                        previewer_command = "eza "
                             .. "-a "
                             .. "--color=always "
                             .. "-T "

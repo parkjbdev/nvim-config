@@ -6,7 +6,16 @@ return {
   --     autoformat = false,
   --   },
   -- },
-  { "karb94/neoscroll.nvim", config = true },
+  -- { "karb94/neoscroll.nvim", config = true },
+  {
+    "rcarriga/nvim-notify",
+    opts = {
+      max_width = function()
+        return math.floor(vim.o.columns * 0.4)
+      end,
+    },
+  },
+  { "mg979/vim-visual-multi" },
   { "wakatime/vim-wakatime" },
   { "rcarriga/nvim-notify" },
 }

@@ -6,13 +6,13 @@ set shiftwidth=4
 set autowrite
 set autoread
 set tabpagemax=20
-set updatetime=100
 set number
 set cursorline
 set termguicolors
 set foldmethod=indent
 set foldlevel=1
 set nofoldenable
+set noswapfile
 
 augroup numbertoggle
     autocmd!

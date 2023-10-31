@@ -1,5 +1,14 @@
 return {
-  { "Pocco81/auto-save.nvim", config = true },
+  {
+    "okuuva/auto-save.nvim",
+    config = function()
+      require("auto-save").setup({
+        execution_message = {
+          enabled = false,
+        },
+      })
+    end,
+  },
   -- {
   --   "neovim/nvim-lspconfig",
   --   opts = {

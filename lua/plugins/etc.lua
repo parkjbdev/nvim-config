@@ -9,13 +9,6 @@ return {
       })
     end,
   },
-  -- {
-  --   "neovim/nvim-lspconfig",
-  --   opts = {
-  --     autoformat = false,
-  --   },
-  -- },
-  -- { "karb94/neoscroll.nvim", config = true },
   {
     "rcarriga/nvim-notify",
     opts = {
@@ -26,5 +19,4 @@ return {
   },
   { "mg979/vim-visual-multi" },
   { "wakatime/vim-wakatime" },
-  { "rcarriga/nvim-notify" },
 }
